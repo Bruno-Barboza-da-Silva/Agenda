@@ -11,18 +11,17 @@ function App() {
     setName(ev.target.value);
   }
 
-  const post = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const post = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Evita o envio automático do formulário
-    axios.post('http://localhost:5000/', {
-      nome: titulo,
-    })
-    .then(() => {
+    try {
+      await axios.post('http://localhost:5000/', {
+        nome: titulo,
+      });
       window.location.href = "/";
       console.log("entrou");
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error('Erro na solicitação POST:', error);
-    });
+    }
   };
 
   return (
@@ -30,11 +29,18 @@ function App() {
       <form onSubmit={post}>
         <h1>Cadastro</h1>
         <label htmlFor="nome">Nome:</label>
-        <input type="text" id="name" placeholder="insira seu nome" name="nome" onChange={(ev) => changeName(ev)}/>
+        <input
+          type="text"
+          id="name"
+          placeholder="insira seu nome"
+          name="nome"
+          value={titulo}
+          onChange={(ev) => changeName(ev)}
+        />
         <button type='submit'>Enviar</button>
       </form>
     </>
-  )
+  );
 }
 
 export default App
