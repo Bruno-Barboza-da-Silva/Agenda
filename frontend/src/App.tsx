@@ -5,14 +5,13 @@ import axios from 'axios'
 function App() {
   // const navigate = useNavigate();
   
-  const [titulo, setName] = useState()
+  const [titulo, setName] = useState("")
 
-  function changeName(ev) {
-    setName(ev.target.value)
+  function changeName(ev: React.ChangeEvent<HTMLInputElement>) {
+    setName(ev.target.value);
   }
 
-  const post = (e) => {
-    console.log("ola")
+  const post = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); // Evita o envio automático do formulário
     axios.post('http://localhost:5000/', {
       nome: titulo,
