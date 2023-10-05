@@ -1,9 +1,13 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 const app = express();
+import cadastroUsuarioRouter from "./routes/usuarios.router"
 
 app.use(express.json());
 app.use(cors());
+
+app.use("/", cadastroUsuarioRouter)
+
 
 // app.post('/', (request: Request, response: Response) => {
   
@@ -13,54 +17,6 @@ app.use(cors());
 //     const responseBody: string = 'Solicitação POST recebida com sucesso!';
 //     response.send(responseBody);
 // });
-
-import { Schema, model, connect } from 'mongoose';
-
-// 1. Create an interface representing a document in MongoDB.
-interface IUser {
-  nome: string;
-//   email: string;
-//   avatar?: string;
-}
-
-// 2. Create a Schema corresponding to the document interface.
-const userSchema = new Schema<IUser>({
-  nome: { type: String, required: true },
-//   email: { type: String, required: true },
-//   avatar: String
-});
-
-// 3. Create a Model for the "usuarios" collection in the "agenda" database.
-const User = model<IUser>('usuarios', userSchema); // 'usuarios' é o nome da coleção
-
-
-
-
-app.post('/', async (request: Request, response: Response) => {
-    const requestBody: { nome: string } = request.body; // 'requestBody' é um objeto com uma propriedade 'nome' de tipo string
-  
-    const responseBody: string = 'Solicitação POST recebida com sucesso!';
-    response.send(responseBody);
-  
-    try {
-      await run(requestBody);
-    } catch (error) {
-      console.error(error);
-    }
-  });
-  
-  async function run(requestBody: { nome: string }) {
-    // 4. Connect to MongoDB with the "agenda" database.
-    await connect('mongodb://127.0.0.1:27017/agenda'); // 'agenda' é o nome do banco de dados
-  
-    const user = new User({
-      nome: requestBody.nome,
-    });
-    await user.save();
-  
-    console.log(user.nome); // Deve ser o nome que você recebeu na solicitação
-  };
-
 
 
 
