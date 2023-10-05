@@ -5,49 +5,79 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.post('/', (request: Request, response: Response) => {
+// app.post('/', (request: Request, response: Response) => {
   
-    const requestBody: string = request.body; // 'requestBody' é uma string
-    console.log(requestBody);
+//     const requestBody: string = request.body; // 'requestBody' é uma string
+//     console.log(requestBody);
   
-    const responseBody: string = 'Solicitação POST recebida com sucesso!';
-    response.send(responseBody);
-});
+//     const responseBody: string = 'Solicitação POST recebida com sucesso!';
+//     response.send(responseBody);
+// });
 
 import { Schema, model, connect } from 'mongoose';
 
 // 1. Create an interface representing a document in MongoDB.
 interface IUser {
-  name: string;
-  email: string;
-  avatar?: string;
+  nome: string;
+//   email: string;
+//   avatar?: string;
 }
 
 // 2. Create a Schema corresponding to the document interface.
 const userSchema = new Schema<IUser>({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  avatar: String
+  nome: { type: String, required: true },
+//   email: { type: String, required: true },
+//   avatar: String
 });
 
 // 3. Create a Model for the "usuarios" collection in the "agenda" database.
 const User = model<IUser>('usuarios', userSchema); // 'usuarios' é o nome da coleção
 
-run().catch(err => console.log(err));
 
-async function run() {
-  // 4. Connect to MongoDB with the "agenda" database.
-  await connect('mongodb://127.0.0.1:27017/agenda'); // 'agenda' é o nome do banco de dados
 
-  const user = new User({
-    name: 'edson',
-    email: 'edson@initech.com',
-    avatar: 'https://i.imgur.com/dM7Thhn.png'
+
+app.post('/', async (request: Request, response: Response) => {
+    const requestBody: { nome: string } = request.body; // 'requestBody' é um objeto com uma propriedade 'nome' de tipo string
+  
+    const responseBody: string = 'Solicitação POST recebida com sucesso!';
+    response.send(responseBody);
+  
+    try {
+      await run(requestBody);
+    } catch (error) {
+      console.error(error);
+    }
   });
-  await user.save();
+  
+  async function run(requestBody: { nome: string }) {
+    // 4. Connect to MongoDB with the "agenda" database.
+    await connect('mongodb://127.0.0.1:27017/agenda'); // 'agenda' é o nome do banco de dados
+  
+    const user = new User({
+      nome: requestBody.nome,
+    });
+    await user.save();
+  
+    console.log(user.nome); // Deve ser o nome que você recebeu na solicitação
+  };
 
-  console.log(user.email); // 'bill@initech.com'
-}
+
+
+
+
+// async function run() {
+//   // 4. Connect to MongoDB with the "agenda" database.
+//   await connect('mongodb://127.0.0.1:27017/agenda'); // 'agenda' é o nome do banco de dados
+
+//   const user = new User({
+//     nome: requestBody.nome,
+//     // email: 'edson@initech.com',
+//     // avatar: 'https://i.imgur.com/dM7Thhn.png'
+//   });
+//   await user.save();
+
+//   console.log(user.nome); // 'bill@initech.com'
+// }
 
 
 
