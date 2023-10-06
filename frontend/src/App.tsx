@@ -4,6 +4,7 @@ import Home from "./pages/home/home";
 import Entrar from "./pages/entrar/entrar";
 import Cadastro from "./pages/cadastro/cadastro";
 import Error from "./pages/error/error"
+import Painel from "./pages/painel/painel"
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/entrar" element={<Entrar />} />
       <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/painel/:id" element={<Painel />}/>
       <Route path="*" element={<Error />} />
 
     </Routes>
