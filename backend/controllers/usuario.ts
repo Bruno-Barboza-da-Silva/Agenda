@@ -34,28 +34,27 @@ const usuarioController = {
 
       try {
         const usuario = await User.findOne({ nome: requestBody.nome });
-        if (usuario) {
-          console.log('Usuário encontrado:', usuario);
-        } else {
-          console.log('Nenhum usuário encontrado com o nome:', requestBody.nome);
-        }
         return usuario;
       } catch (error) {
         console.error('Erro ao procurar o usuário:', error);
+        throw error;
       }
     }
 
     try {
-      const hashedPassword = await hashPassword(requestBody.senha);
-      const usuarioEncontrado = await FindUser(requestBody);
+      const usuarioExistente = await FindUser(requestBody);
 
-      if (!usuarioEncontrado) {
-        // Somente salve o usuário se ele não existir
-        await run(requestBody, hashedPassword);
+      if (usuarioExistente) {
+        // Se o usuário já existe, envie uma resposta informando o usuário
+        response.status(400).json({ message: 'Usuário já cadastrado' });
+        return;
       }
 
-      // Após a criação bem-sucedida ou detecção de que o usuário já existe, exibir o alerta
-      const alertMessage = 'Usuário cadastrado com sucesso ou já existente!';
+      const hashedPassword = await hashPassword(requestBody.senha);
+      await run(requestBody, hashedPassword);
+
+      // Após a criação bem-sucedida, exibir o alerta
+      const alertMessage = 'Usuário cadastrado com sucesso!';
       response.status(200).json({ message: alertMessage });
     } catch (error) {
       console.error(error);
