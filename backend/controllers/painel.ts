@@ -6,7 +6,8 @@ import cookieParser from 'cookie-parser';
 const loginController = {
   index: async (request: Request, response: Response) => {
     console.log("cheguei aqui");
-    
+    response.cookie("session_id", "123456")
+    response.status(200).json({message: "logged in"})
 
    
   },
