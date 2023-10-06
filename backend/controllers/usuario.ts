@@ -28,12 +28,13 @@ const usuarioController = {
       return;
     }
 
-    const responseBody: string = 'Solicitação POST recebida com sucesso!';
-    response.send(responseBody);
-
     try {
-      const hashedPassword = await hashPassword(requestBody.senha); // Chame a função hashPassword para gerar o hash da senha
+      const hashedPassword = await hashPassword(requestBody.senha);
       await run(requestBody, hashedPassword);
+
+      // Após a criação bem-sucedida, exibir o alerta
+      const alertMessage = 'Usuário cadastrado com sucesso!';
+      response.status(200).json({ message: alertMessage });
     } catch (error) {
       console.error(error);
       response.status(500).send('Erro interno do servidor');
@@ -42,10 +43,10 @@ const usuarioController = {
     async function hashPassword(password: string) {
       try {
         const hashedPassword = await argon2.hash(password);
-        return hashedPassword; // Retorne o hash da senha
+        return hashedPassword;
       } catch (error) {
         console.error('Erro ao hash da senha:', error);
-        throw error; // Lançar erro para tratar na função principal
+        throw error;
       }
     }
 
@@ -55,7 +56,7 @@ const usuarioController = {
       const user = new User({
         nome: requestBody.nome,
         email: requestBody.email,
-        senha: hashedPassword, // Use o hash da senha aqui
+        senha: hashedPassword,
       });
       await user.save();
 
@@ -65,8 +66,6 @@ const usuarioController = {
 };
 
 export default usuarioController;
-
-
 
 
 

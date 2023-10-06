@@ -33,6 +33,7 @@ function App() {
         senha: senha
       });
       window.location.href = "/";
+      alert('Usuário cadastrado com sucesso!');
     } catch (error) {
       console.error('Erro na solicitação POST:', error);
     }
