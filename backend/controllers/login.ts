@@ -23,7 +23,6 @@ const loginController = {
         if (usuario) {
           const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
           if (senhaValida) {
-            console.log("senha correta")
             return usuario;
           } else {
             console.error('Senha incorreta');
@@ -38,18 +37,21 @@ const loginController = {
       }
     }
     
-    console.log("estou fora");
-
     try {
-      const EmailExistente = await FindEmail(requestBody);
+      const usuario = await FindEmail(requestBody);
 
-      if (EmailExistente) {
-        // Se o usuário já existe, envie uma resposta informando o usuário
-        response.status(400).json({ message: 'E-mail já cadastrado' });
-        return;
+      if (usuario) {
+        // Se o usuário existe e a senha está correta, envie dados relevantes para o frontend
+        const responseData = {
+          id: usuario._id,
+          nome: usuario.nome,
+          // Adicione outros campos que deseja enviar para o frontend
+        };
+        console.log(responseData)
+        response.status(200).json(responseData);
+      } else {
+        response.status(400).json({ message: 'E-mail ou senha incorretos' });
       }
-      
-      // Resto do seu código aqui
 
     } catch (error) {
       console.error(error);
@@ -59,4 +61,3 @@ const loginController = {
 };
 
 export default loginController;
-
