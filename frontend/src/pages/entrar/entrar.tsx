@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-function Entrar() {
+function App() {
+  
 
   const [email, setEmail] = useState("")
   
@@ -24,18 +25,36 @@ function Entrar() {
         email: email,
         senha: senha
       });
+
+      // Redireciona para a página inicial após o cadastro bem-sucedido
       window.location.href = "/";
       alert('Usuário cadastrado com sucesso!');
     } catch (error) {
-      console.error('Erro na solicitação POST:', error);
+      if(error.response.data.message === "E-mail já cadastrado"){
+        console.log(error.response.data.message)
+          return alert('Erro: E-mail já cadastrado');
+      }
+      if (error.response.status === 400 && error.response.data.message !== "E-mail já cadastrado") {    
+        // Erro de validação ou condição ruim (BadRequest)
+        return alert('Erro: Parâmetros inválidos');
+      } else {
+        // Outros erros de rede ou servidor
+        console.error('Erro na solicitação POST:', error);
+        alert('Erro desconhecido');
+      }
     }
   };
+
+
+
+
+
 
   return (
     <>
       <form onSubmit={post}>
         <h1>Entrar</h1>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">E-mail:</label>
         <input type="email" id="email" placeholder="insira seu e-mail" name="email" value={email} onChange={(ev) => changeEmail(ev)}/>
         <label htmlFor="password">Senha:</label>
         <input type="password" id="password" placeholder="insira sua senha" name="password" value={senha} onChange={(ev) => changeSenha(ev)}/>
@@ -43,6 +62,6 @@ function Entrar() {
       </form>
     </>
   );
-  }
-  
-  export default Entrar;
+}
+
+export default App

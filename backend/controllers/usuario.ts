@@ -2,23 +2,15 @@ import { Schema, model, connect } from 'mongoose';
 import mongoose from "mongoose";
 import express, { Request, Response } from 'express';
 import argon2 from 'argon2';
+import IUser from './inteface/usuarios.interface';
+import User from './models/usuarios.models'
 
-// 1. Create an interface representing a document in MongoDB.
-interface IUser {
-  nome: string;
-  email: string;
-  senha: string;
-}
 
-// 2. Create a Schema corresponding to the document interface.
-const userSchema = new Schema<IUser>({
-  nome: { type: String, required: true },
-  email: { type: String, required: true },
-  senha: { type: String, required: true },
-});
+
+
 
 // 3. Create a Model for the "usuarios" collection in the "agenda" database.
-const User = model<IUser>('usuarios', userSchema); // 'usuarios' é o nome da coleção
+// const User = model<IUser>('usuarios', userSchema); // 'usuarios' é o nome da coleção
 
 const usuarioController = {
   cadastro: async (request: Request, response: Response) => {
