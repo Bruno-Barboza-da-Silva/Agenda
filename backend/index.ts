@@ -5,6 +5,7 @@ import session, { Session } from 'express-session';
 import cookieParser from 'cookie-parser';
 import loginRouter from "./routes/login.router"
 import crypto from 'crypto'
+import painelRouter from './routes/painel.router'
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use('/cadastro', cadastroUsuarioRouter);
 
 app.use('/entrar', loginRouter);
 
-
+app.use('/painel', painelRouter);
 
 
 // Configuração do express-session

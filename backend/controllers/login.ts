@@ -4,7 +4,8 @@ import express, { Request, Response } from 'express';
 import argon2 from 'argon2';
 import IUser from './inteface/usuarios.interface';
 import User from './models/usuarios.models'
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
+import crypto from 'crypto';
 
 const loginController = {
   index: async (request: Request, response: Response) => {
@@ -25,8 +26,13 @@ const loginController = {
           const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
           if (senhaValida) {
 
-    // Define um cookie personalizado
-response.cookie('meuCookie', 'Valor do Cookie', { maxAge: 3600000 });
+    // Gere um nome de cookie exclusivo com base no ID do usuário
+    const cookieName = `userCookie_${usuario._id.toString()}`;
+    console.log(cookieName)
+    
+    // Define um cookie personalizado com o nome exclusivo
+    response.cookie(cookieName, 'Valor do Cookie', { maxAge: 3600000 });
+
 
 console.log('Sessão criada e cookie definido');
             return usuario;
