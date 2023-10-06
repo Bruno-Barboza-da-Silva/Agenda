@@ -1,5 +1,6 @@
 import { Schema, model, connect } from 'mongoose';
 import express, { Request, Response } from 'express';
+import argon2 from 'argon2';
 
 // 1. Create an interface representing a document in MongoDB.
 interface IUser {
@@ -23,7 +24,6 @@ const usuarioController = {
     const requestBody: { nome: string; email: string; senha: string } = request.body;
 
     if (!requestBody.nome || !requestBody.email || !requestBody.senha) {
-      // Verifica se todas as propriedades necessárias estão presentes na solicitação
       response.status(400).send('Parâmetros incompletos na solicitação');
       return;
     }
@@ -32,20 +32,30 @@ const usuarioController = {
     response.send(responseBody);
 
     try {
-      await run(requestBody);
+      const hashedPassword = await hashPassword(requestBody.senha); // Chame a função hashPassword para gerar o hash da senha
+      await run(requestBody, hashedPassword);
     } catch (error) {
       console.error(error);
       response.status(500).send('Erro interno do servidor');
     }
 
-    async function run(requestBody: { nome: string; email: string; senha: string }) {
-      // 4. Connect to MongoDB with the "agenda" database.
-      await connect('mongodb://127.0.0.1:27017/agenda'); // 'agenda' é o nome do banco de dados
+    async function hashPassword(password: string) {
+      try {
+        const hashedPassword = await argon2.hash(password);
+        return hashedPassword; // Retorne o hash da senha
+      } catch (error) {
+        console.error('Erro ao hash da senha:', error);
+        throw error; // Lançar erro para tratar na função principal
+      }
+    }
+
+    async function run(requestBody: { nome: string; email: string; senha: string }, hashedPassword: string) {
+      await connect('mongodb://127.0.0.1:27017/agenda');
 
       const user = new User({
         nome: requestBody.nome,
         email: requestBody.email,
-        senha: requestBody.senha,
+        senha: hashedPassword, // Use o hash da senha aqui
       });
       await user.save();
 
@@ -55,7 +65,6 @@ const usuarioController = {
 };
 
 export default usuarioController;
-
 
 
 
