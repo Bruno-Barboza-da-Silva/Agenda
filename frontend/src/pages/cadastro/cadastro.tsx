@@ -31,12 +31,30 @@ function App() {
         email: email,
         senha: senha
       });
+
+      // Redireciona para a página inicial após o cadastro bem-sucedido
       window.location.href = "/";
       alert('Usuário cadastrado com sucesso!');
     } catch (error) {
-      console.error('Erro na solicitação POST:', error);
+      if(error.response.data.message === "Usuário já cadastrado"){
+        console.log(error.response.data.message)
+          return alert('Erro: Usuário já cadastrado');
+      }
+      if (error.response.status === 400 && error.response.data.message !== "Usuário já cadastrado") {    
+        // Erro de validação ou condição ruim (BadRequest)
+        return alert('Erro: Parâmetros inválidos');
+      } else {
+        // Outros erros de rede ou servidor
+        console.error('Erro na solicitação POST:', error);
+        alert('Erro desconhecido');
+      }
     }
   };
+
+
+
+
+
 
   return (
     <>
