@@ -1,12 +1,65 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-const app = express();
-import cadastroUsuarioRouter from "./routes/usuarios.router"
+import cadastroUsuarioRouter from './routes/usuarios.router';
+import session, { Session } from 'express-session';
+import cookieParser from 'cookie-parser';
+import loginRouter from "./routes/login.router"
 
+const app = express();
+
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 
-app.use("/cadastro", cadastroUsuarioRouter)
+app.use('/cadastro', cadastroUsuarioRouter);
+
+app.use('/entrar', loginRouter);
+
+
+
+
+
+
+declare module 'express' {
+  interface Request {
+    session: Session & { usuario?: { id: number; nome: string } };
+  }
+}
+
+// Configuração do middleware de sessão
+app.use(
+  session({
+    secret: 'sua-chave-secreta',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: true, // Somente enviar cookies em conexões HTTPS
+      httpOnly: true, // Impedir acesso via JavaScript no navegador
+      sameSite: 'lax', // Configurar a política SameSite
+    },
+  })
+);
+
+app.get('/', (request: Request, response: Response) => {
+  // Acesse a sessão personalizada
+  const usuario = request.session?.usuario;
+  console.log(usuario)
+
+  if (usuario) {
+    response.send(`Olá, ${usuario.nome}!`);
+  } else {
+    response.send('Você não está logado.');
+  }
+});
+
+app.listen(5000, () => {
+  console.log('Aplicação rodando na porta 5000');
+});
+
+
+
+
+
 
 
 // app.post('/', (request: Request, response: Response) => {
@@ -62,9 +115,7 @@ app.use("/cadastro", cadastroUsuarioRouter)
 //   });
 
 
-app.listen(5000, () => {
-  console.log("Aplicação rodando na porta 5000");
-});
+
 
 
 

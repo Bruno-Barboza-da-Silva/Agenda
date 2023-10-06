@@ -1,4 +1,5 @@
 import { Schema, model, connect } from 'mongoose';
+import mongoose from "mongoose";
 import express, { Request, Response } from 'express';
 import argon2 from 'argon2';
 
@@ -28,12 +29,33 @@ const usuarioController = {
       return;
     }
 
+    async function FindUser(requestBody: { nome: string }) {
+      await connect('mongodb://127.0.0.1:27017/agenda');
+
+      try {
+        const usuario = await User.findOne({ nome: requestBody.nome });
+        if (usuario) {
+          console.log('Usuário encontrado:', usuario);
+        } else {
+          console.log('Nenhum usuário encontrado com o nome:', requestBody.nome);
+        }
+        return usuario;
+      } catch (error) {
+        console.error('Erro ao procurar o usuário:', error);
+      }
+    }
+
     try {
       const hashedPassword = await hashPassword(requestBody.senha);
-      await run(requestBody, hashedPassword);
+      const usuarioEncontrado = await FindUser(requestBody);
 
-      // Após a criação bem-sucedida, exibir o alerta
-      const alertMessage = 'Usuário cadastrado com sucesso!';
+      if (!usuarioEncontrado) {
+        // Somente salve o usuário se ele não existir
+        await run(requestBody, hashedPassword);
+      }
+
+      // Após a criação bem-sucedida ou detecção de que o usuário já existe, exibir o alerta
+      const alertMessage = 'Usuário cadastrado com sucesso ou já existente!';
       response.status(200).json({ message: alertMessage });
     } catch (error) {
       console.error(error);
@@ -58,19 +80,10 @@ const usuarioController = {
         email: requestBody.email,
         senha: hashedPassword,
       });
-      await user.save();
 
-      console.log(user.nome, user.email, user.senha);
+      await user.save();
     }
   },
 };
 
 export default usuarioController;
-
-
-
-
-
-
-
-
