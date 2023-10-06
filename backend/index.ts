@@ -6,7 +6,7 @@ import cadastroUsuarioRouter from "./routes/usuarios.router"
 app.use(express.json());
 app.use(cors());
 
-app.use("/", cadastroUsuarioRouter)
+app.use("/cadastro", cadastroUsuarioRouter)
 
 
 // app.post('/', (request: Request, response: Response) => {
