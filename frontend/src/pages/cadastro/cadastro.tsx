@@ -36,11 +36,11 @@ function App() {
       window.location.href = "/";
       alert('Usuário cadastrado com sucesso!');
     } catch (error) {
-      if(error.response.data.message === "Usuário já cadastrado"){
+      if(error.response.data.message === "E-mail já cadastrado"){
         console.log(error.response.data.message)
-          return alert('Erro: Usuário já cadastrado');
+          return alert('Erro: E-mail já cadastrado');
       }
-      if (error.response.status === 400 && error.response.data.message !== "Usuário já cadastrado") {    
+      if (error.response.status === 400 && error.response.data.message !== "E-mail já cadastrado") {    
         // Erro de validação ou condição ruim (BadRequest)
         return alert('Erro: Parâmetros inválidos');
       } else {

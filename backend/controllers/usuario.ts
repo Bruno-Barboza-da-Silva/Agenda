@@ -29,11 +29,11 @@ const usuarioController = {
       return;
     }
 
-    async function FindUser(requestBody: { nome: string }) {
+    async function FindEmail(requestBody: { email: string }) {
       await connect('mongodb://127.0.0.1:27017/agenda');
 
       try {
-        const usuario = await User.findOne({ nome: requestBody.nome });
+        const usuario = await User.findOne({ email: requestBody.email });
         return usuario;
       } catch (error) {
         console.error('Erro ao procurar o usuário:', error);
@@ -42,11 +42,11 @@ const usuarioController = {
     }
 
     try {
-      const usuarioExistente = await FindUser(requestBody);
+      const EmailExistente = await FindEmail(requestBody);
 
-      if (usuarioExistente) {
+      if (EmailExistente) {
         // Se o usuário já existe, envie uma resposta informando o usuário
-        response.status(400).json({ message: 'Usuário já cadastrado' });
+        response.status(400).json({ message: 'E-mail já cadastrado' });
         return;
       }
 
