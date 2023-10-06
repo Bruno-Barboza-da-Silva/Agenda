@@ -27,11 +27,11 @@ const loginController = {
           if (senhaValida) {
 
     // Gere um nome de cookie exclusivo com base no ID do usuário
-    const cookieName = `userCookie_${usuario._id.toString()}`;
-    console.log(cookieName)
+    // const cookieName = `userCookie_${usuario._id.toString()}`;
+    // console.log(cookieName)
     
-    // Define um cookie personalizado com o nome exclusivo
-    response.cookie(cookieName, 'Valor do Cookie', { maxAge: 3600000 });
+    // // Define um cookie personalizado com o nome exclusivo
+    // response.cookie(cookieName, 'Valor do Cookie', { maxAge: 3600000 });
 
 
 console.log('Sessão criada e cookie definido');

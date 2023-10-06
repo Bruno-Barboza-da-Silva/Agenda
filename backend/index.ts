@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, urlencoded } from 'express';
 import cors from 'cors';
 import cadastroUsuarioRouter from './routes/usuarios.router';
 import session, { Session } from 'express-session';
@@ -11,6 +11,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({extended: false}))
 app.use(cors());
 
 app.use('/cadastro', cadastroUsuarioRouter);
@@ -21,17 +22,17 @@ app.use('/painel', painelRouter);
 
 
 // Configuração do express-session
-app.use(
-  session({
-    secret: crypto.randomBytes(64).toString('hex'), // Chave secreta para assinar os cookies
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false, // Defina como true se estiver usando HTTPS
-      maxAge: 3600000, // Tempo de expiração do cookie em milissegundos (1 hora neste exemplo)
-    },
-  })
-);
+// app.use(
+//   session({
+//     secret: crypto.randomBytes(64).toString('hex'), // Chave secreta para assinar os cookies
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       secure: false, // Defina como true se estiver usando HTTPS
+//       maxAge: 3600000, // Tempo de expiração do cookie em milissegundos (1 hora neste exemplo)
+//     },
+//   })
+// );
 
 
 
