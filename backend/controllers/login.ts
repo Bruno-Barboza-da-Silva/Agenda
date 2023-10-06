@@ -1,21 +1,9 @@
 import { Schema, model, connect } from 'mongoose';
+import mongoose from "mongoose";
 import express, { Request, Response } from 'express';
 import argon2 from 'argon2';
-
-// 1. Create an interface representing a document in MongoDB.
-interface IUser {
-  email: string;
-  senha: string;
-}
-
-// 2. Create a Schema corresponding to the document interface.
-const userSchema = new Schema<IUser>({
-  email: { type: String, required: true },
-  senha: { type: String, required: true },
-});
-
-// Check if the model already exists before defining it
-const User = model<IUser>('usuarios') || model<IUser>('usuarios', userSchema);
+import IUser from './inteface/usuarios.interface';
+import User from './models/usuarios.models'
 
 const loginController = {
   index: async (request: Request, response: Response) => {
@@ -26,24 +14,43 @@ const loginController = {
       return;
     }
 
+    async function FindEmail(requestBody: { email: string; senha: string }) {
+      await connect('mongodb://127.0.0.1:27017/agenda');
+    
+      try {
+        const usuario = await User.findOne({ email: requestBody.email });
+    
+        if (usuario) {
+          const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
+          if (senhaValida) {
+            console.log("senha correta")
+            return usuario;
+          } else {
+            console.error('Senha incorreta');
+            return null;
+          }
+        }
+    
+        return null;
+      } catch (error) {
+        console.error('Erro ao procurar o usuário:', error);
+        throw error;
+      }
+    }
+    
+    console.log("estou fora");
+
     try {
-      const user = await User.findOne({ email: requestBody.email });
+      const EmailExistente = await FindEmail(requestBody);
 
-      if (!user) {
-        response.status(404).send('Usuário não encontrado');
+      if (EmailExistente) {
+        // Se o usuário já existe, envie uma resposta informando o usuário
+        response.status(400).json({ message: 'E-mail já cadastrado' });
         return;
       }
+      
+      // Resto do seu código aqui
 
-      const isPasswordValid = await argon2.verify(user.senha, requestBody.senha);
-
-      if (!isPasswordValid) {
-        response.status(401).send('Credenciais inválidas');
-        return;
-      }
-
-      // Autenticação bem-sucedida, você pode criar uma sessão ou gerar um token JWT aqui
-      console.log("Login bem-sucedido");
-      response.status(200).json({ message: 'Login bem-sucedido' });
     } catch (error) {
       console.error(error);
       response.status(500).send('Erro interno do servidor');
@@ -52,3 +59,4 @@ const loginController = {
 };
 
 export default loginController;
+
