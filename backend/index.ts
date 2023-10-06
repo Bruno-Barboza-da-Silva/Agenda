@@ -4,6 +4,7 @@ import cadastroUsuarioRouter from './routes/usuarios.router';
 import session, { Session } from 'express-session';
 import cookieParser from 'cookie-parser';
 import loginRouter from "./routes/login.router"
+import crypto from 'crypto'
 
 const app = express();
 
@@ -18,39 +19,25 @@ app.use('/entrar', loginRouter);
 
 
 
-
-
-declare module 'express' {
-  interface Request {
-    session: Session & { usuario?: { id: number; nome: string } };
-  }
-}
-
-// Configuração do middleware de sessão
+// Configuração do express-session
 app.use(
   session({
-    secret: 'sua-chave-secreta',
+    secret: crypto.randomBytes(64).toString('hex'), // Chave secreta para assinar os cookies
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: true, // Somente enviar cookies em conexões HTTPS
-      httpOnly: true, // Impedir acesso via JavaScript no navegador
-      sameSite: 'lax', // Configurar a política SameSite
+      secure: false, // Defina como true se estiver usando HTTPS
+      maxAge: 3600000, // Tempo de expiração do cookie em milissegundos (1 hora neste exemplo)
     },
   })
 );
 
-app.get('/', (request: Request, response: Response) => {
-  // Acesse a sessão personalizada
-  const usuario = request.session?.usuario;
-  console.log(usuario)
 
-  if (usuario) {
-    response.send(`Olá, ${usuario.nome}!`);
-  } else {
-    response.send('Você não está logado.');
-  }
-});
+
+
+
+
+
 
 app.listen(5000, () => {
   console.log('Aplicação rodando na porta 5000');

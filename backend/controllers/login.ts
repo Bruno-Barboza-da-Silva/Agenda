@@ -4,6 +4,7 @@ import express, { Request, Response } from 'express';
 import argon2 from 'argon2';
 import IUser from './inteface/usuarios.interface';
 import User from './models/usuarios.models'
+import cookieParser from 'cookie-parser'
 
 const loginController = {
   index: async (request: Request, response: Response) => {
@@ -23,6 +24,11 @@ const loginController = {
         if (usuario) {
           const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
           if (senhaValida) {
+
+    // Define um cookie personalizado
+response.cookie('meuCookie', 'Valor do Cookie', { maxAge: 3600000 });
+
+console.log('Sessão criada e cookie definido');
             return usuario;
           } else {
             console.error('Senha incorreta');
