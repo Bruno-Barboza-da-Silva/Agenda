@@ -13,9 +13,10 @@ import crypto from 'crypto';
 const loginController = {
   index: async (request: Request, response: Response) => {
     const requestBody: { email: string; senha: string } = request.body;
-    
-    console.log(request.session)
-    console.log(request.session.authenticated)
+
+    // console.log(request.session)
+    // console.log(request.session.authenticated)
+
     
     if (!requestBody.email || !requestBody.senha) {
       response.status(400).send('Parâmetros incompletos na solicitação');
@@ -33,8 +34,9 @@ const loginController = {
           if (senhaValida) {
             request.session.authenticated = true
 
-            console.log(request.session)
-            console.log(request.session.authenticated)
+            // console.log(request.session)
+            // console.log(request.session.authenticated)
+            console.log(request.session.id)
 
 
 console.log('Sessão criada e cookie definido');

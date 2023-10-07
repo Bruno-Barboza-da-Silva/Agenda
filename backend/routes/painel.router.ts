@@ -20,6 +20,8 @@ function validateCookie(request: Request, response: Response, next: NextFunction
     }
 }
 
+
+
 router.get('/:id', painelController.index);
 
 export default router;
