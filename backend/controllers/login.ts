@@ -32,11 +32,11 @@ const loginController = {
         if (usuario) {
           const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
           if (senhaValida) {
-            request.session.authenticated = true
+            request.session.authenticated = true;
+            request.session.userId = usuario._id;
 
-            // console.log(request.session)
+            console.log(request.session)
             // console.log(request.session.authenticated)
-            console.log(request.session.id)
 
 
 console.log('Sessão criada e cookie definido');

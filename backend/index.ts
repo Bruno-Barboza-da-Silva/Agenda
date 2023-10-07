@@ -45,7 +45,7 @@ function console1(){
   console.log(store)
 }
 
-app.use('/painel', console1, painelRouter);
+app.use('/painel', painelRouter);
 
 
 app.post('/login', (req, res) => {
