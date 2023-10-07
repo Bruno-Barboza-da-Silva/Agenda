@@ -8,6 +8,7 @@ const loginController = {
     console.log("cheguei aqui");
     response.cookie("session_id", "123456")
     response.status(200).json({message: "logged in"})
+    console.log(request.session)
 
    
   },
