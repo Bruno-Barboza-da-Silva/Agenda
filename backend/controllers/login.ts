@@ -13,9 +13,10 @@ import crypto from 'crypto';
 const loginController = {
   index: async (request: Request, response: Response) => {
     const requestBody: { email: string; senha: string } = request.body;
-    
-    console.log(request.session)
-    console.log(request.session.authenticated)
+
+    // console.log(request.session)
+    // console.log(request.session.authenticated)
+
     
     if (!requestBody.email || !requestBody.senha) {
       response.status(400).send('Parâmetros incompletos na solicitação');
@@ -31,10 +32,11 @@ const loginController = {
         if (usuario) {
           const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
           if (senhaValida) {
-            request.session.authenticated = true
+            request.session.authenticated = true;
+            request.session.userId = usuario._id;
 
             console.log(request.session)
-            console.log(request.session.authenticated)
+            // console.log(request.session.authenticated)
 
 
 console.log('Sessão criada e cookie definido');

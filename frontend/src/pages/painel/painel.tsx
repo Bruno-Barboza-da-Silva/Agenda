@@ -11,7 +11,7 @@ function App () {
 
   const [frase, setFrase] = useState([])
   useEffect(()=>{
-    axios.get(`http://localhost:5000/painel/${id}`).then((res)=>{
+    axios.get(`http://localhost:5000/painel/`).then((res)=>{
       console.log(res)
       // setFrase(res.data[0].name)
     });

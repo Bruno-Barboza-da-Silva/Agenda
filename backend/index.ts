@@ -7,6 +7,7 @@ import loginRouter from "./routes/login.router"
 import crypto from 'crypto'
 import painelRouter from './routes/painel.router'
 import bodyParser from 'body-parser';
+const store = new session.MemoryStore();
 const app = express();
 
 
@@ -24,6 +25,7 @@ app.use(
     resave: false,
     cookie: { maxAge: 30000 },
     saveUninitialized: false,
+    store
   })
 );
 
@@ -38,6 +40,10 @@ app.use(cors());
 app.use('/cadastro', cadastroUsuarioRouter);
 
 app.use('/entrar', loginRouter);
+
+function console1(){
+  console.log(store)
+}
 
 app.use('/painel', painelRouter);
 

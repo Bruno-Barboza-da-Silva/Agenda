@@ -35,7 +35,7 @@ function App() {
         const nome = responseData.nome;
         console.log(id)
         // Faça o que você desejar com os dados, como redirecionar ou exibir na interface do usuário
-        window.location.href = `/painel/${id}`; // Redireciona para a página inicial
+        window.location.href = `/painel/`; // Redireciona para a página inicial
         alert('Login efetuado com sucesso!');
       }
     } catch (error) {
