@@ -7,10 +7,16 @@ import User from './models/usuarios.models'
 import cookieParser from 'cookie-parser';
 import crypto from 'crypto';
 
+
+
+
 const loginController = {
   index: async (request: Request, response: Response) => {
     const requestBody: { email: string; senha: string } = request.body;
-
+    
+    console.log(request.session)
+    console.log(request.session.authenticated)
+    
     if (!requestBody.email || !requestBody.senha) {
       response.status(400).send('Parâmetros incompletos na solicitação');
       return;
@@ -25,13 +31,10 @@ const loginController = {
         if (usuario) {
           const senhaValida = await argon2.verify(usuario.senha, requestBody.senha);
           if (senhaValida) {
+            request.session.authenticated = true
 
-    // Gere um nome de cookie exclusivo com base no ID do usuário
-    // const cookieName = `userCookie_${usuario._id.toString()}`;
-    // console.log(cookieName)
-    
-    // // Define um cookie personalizado com o nome exclusivo
-    // response.cookie(cookieName, 'Valor do Cookie', { maxAge: 3600000 });
+            console.log(request.session)
+            console.log(request.session.authenticated)
 
 
 console.log('Sessão criada e cookie definido');

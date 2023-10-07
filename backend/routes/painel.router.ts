@@ -3,6 +3,7 @@ import painelController from '../controllers/painel';
 
 const router = Router();
 
+
 // Middleware personalizado para validação de cookie
 function validateCookie(request: Request, response: Response, next: NextFunction) {
     const { cookies } = request;
@@ -19,6 +20,6 @@ function validateCookie(request: Request, response: Response, next: NextFunction
     }
 }
 
-router.get('/:id', validateCookie, painelController.index);
+router.get('/:id', painelController.index);
 
 export default router;
