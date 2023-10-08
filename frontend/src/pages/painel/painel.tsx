@@ -1,30 +1,34 @@
-import axios from 'axios'
-import React,{useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from 'react-router-dom'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
-function App () {
+function App() {
 
-  const { id } = useParams();
-  console.log(id)
+  const [id, setId] = useState('')
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
 
-
-  const [frase, setFrase] = useState([])
-  useEffect(()=>{
-    axios.get(`http://localhost:5000/painel/`).then((res)=>{
-      console.log(res)
-      // setFrase(res.data[0].name)
-    });
-  },)
-
-
+  useEffect(() => {
+    // Use useEffect para fazer a solicitação HTTP quando o componente for montado
+    axios
+      .get(`http://localhost:5000/painel/`)
+      .then((response) => {
+        setId(response.data.id)
+        setNome(response.data.nome)
+        setEmail(response.data.email)
+      })
+      .catch((error) => {
+        console.error('Erro na solicitação:', error);
+      });
+  }, [id, nome, email]); // Adicione id como dependência para reagir a mudanças no valor de id
 
   return (
     <>
-    <h1>Olá</h1>
+      <h1>Olá</h1>
+      <p>id: {id}</p>
+      <p>nome: {nome}</p>
+      <p>email: {email}</p>
     </>
-  )
+  );
 }
 
-
-export default App
+export default App;
