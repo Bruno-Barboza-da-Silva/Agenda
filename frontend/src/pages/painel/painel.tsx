@@ -64,6 +64,18 @@ function App() {
     setCor(ev.target.value);
   };
 
+  const getTileContent = ({ date, view }) => {
+    const eventosDoDia = eventos.filter((evento) => evento.data === date.toISOString().split('T')[0]);
+
+    if (eventosDoDia.length > 0) {
+      return eventosDoDia.map((evento, index) => (
+        <div key={index}>{evento.evento}</div>
+      ));
+    }
+
+    return null;
+  };
+
   const post = async (e) => {
     e.preventDefault();
     try {
@@ -76,7 +88,7 @@ function App() {
         email_usuario: email,
       });
       alert('Evento cadastrado com sucesso!');
-      window.location.href = `/painel/`
+      window.location.href = `/painel/`;
     } catch (error) {
       alert('Erro ao cadastrar o evento');
     }
@@ -90,16 +102,8 @@ function App() {
       <p>email: {email}</p>
       <button onClick={logout}>Sair</button>
 
-      <Calendar onChange={setDate} value={date} tileContent={'\n Evento'} />
+      <Calendar onChange={setDate} value={date} tileContent={getTileContent} />
 
-      {eventos.map((evento, index) => (
-        <div key={index}>
-          <p>{evento.hora}</p>
-          <p>{evento.evento}</p>
-          <p>{evento.data}</p>
-          {/* Adicione aqui mais elementos do evento que você deseja exibir */}
-        </div>
-      ))}
 
       <form onSubmit={post}>
         <label htmlFor="evento">Evento:</label>
