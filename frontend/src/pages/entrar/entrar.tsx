@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
+import { AxiosError } from 'axios';
 
 function App() {
   
@@ -32,23 +33,28 @@ function App() {
         
         // Agora você pode acessar os dados enviados no responseData
         const id = responseData.id;
-        const nome = responseData.nome;
+        // const nome = responseData.nome;
         console.log(id)
         // Faça o que você desejar com os dados, como redirecionar ou exibir na interface do usuário
         window.location.href = `/painel/`; // Redireciona para a página inicial
         alert('Login efetuado com sucesso!');
       }
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message === "E-mail ou senha incorretos") {
-        console.log(error.response.data.message)
-        return alert('Erro: E-mail ou senha incorretos');
-      }
-      if (error.response && error.response.status === 400 && error.response.data && error.response.data.message !== "E-mail ou senha incorretos") {
-        // Erro de validação ou condição ruim (BadRequest)
-        return alert('Erro: Por favor, preencha seu e-mail e senha');
+      if (error instanceof AxiosError) { // Verifique o tipo usando 'instanceof' após a captura
+        if (error.response && error.response.data && error.response.data.message === "E-mail ou senha incorretos") {
+          console.log(error.response.data.message);
+          alert('Erro: E-mail ou senha incorretos');
+        } else if (error.response && error.response.status === 400 && error.response.data && error.response.data.message !== "E-mail ou senha incorretos") {
+          // Erro de validação ou condição ruim (BadRequest)
+          alert('Erro: Por favor, preencha seu e-mail e senha');
+        } else {
+          // Outros erros de rede ou servidor
+          console.error('Erro na solicitação POST:', error);
+          alert('Erro desconhecido');
+        }
       } else {
-        // Outros erros de rede ou servidor
-        console.error('Erro na solicitação POST:', error);
+        // Se o tipo de erro não for AxiosError
+        console.error('Erro desconhecido:', error);
         alert('Erro desconhecido');
       }
     }

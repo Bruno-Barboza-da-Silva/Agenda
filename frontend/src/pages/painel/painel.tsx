@@ -77,19 +77,15 @@ const [evento, setEvento] = useState("")
         hora,
         data,
         outros,
-        cor
+        cor,
+        email_usuario: email,
       });
 
-      alert('Usuário cadastrado com sucesso!');
+      alert('Evento cadastrado com sucesso!');
     } catch (error) {
-        alert('Erro');
+        alert('Erro ao cadastrar o evento');
       }
     }
-
-
-
-
-
 
 
   return (
