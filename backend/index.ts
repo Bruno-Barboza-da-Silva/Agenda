@@ -8,6 +8,7 @@ import crypto from 'crypto'
 import painelRouter from './routes/painel.router'
 import bodyParser from 'body-parser';
 import logout from "./routes/logout.router"
+import eventos from "./routes/eventos.router"
 const store = new session.MemoryStore();
 const app = express();
 
@@ -57,6 +58,9 @@ app.post('/login', (req, res) => {
 })
 
 app.use("/logout", logout)
+
+app.use("/painel/evento/cadastro", eventos)
+
 
 app.listen(5000, () => {
   console.log('Aplicação rodando na porta 5000');
