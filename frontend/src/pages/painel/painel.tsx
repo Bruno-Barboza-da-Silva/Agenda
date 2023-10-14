@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import 'react-calendar/dist/Calendar.css'
 
 function App() {
 
@@ -38,7 +38,55 @@ function App() {
     console.log("logout");
   };
 
-// criando eventos no
+// criando eventos 
+const [evento, setEvento] = useState("")
+
+  function changeEvento(ev: React.ChangeEvent<HTMLInputElement>) {
+    setEvento(ev.target.value);
+  }
+
+  const [hora, setHora] = useState("")
+
+  function changeHora(ev: React.ChangeEvent<HTMLInputElement>) {
+    setHora(ev.target.value);
+  }
+  const [data, setData] = useState(Date())
+
+  function changeData(ev: React.ChangeEvent<HTMLInputElement>) {
+    setData(ev.target.value);
+  }
+
+  const [outros, setOutros] = useState("")
+
+  function changeOutros(ev: React.ChangeEvent<HTMLInputElement>) {
+    setOutros(ev.target.value);
+  }
+
+  const [cor, setCor] = useState("#000000")
+
+  function changeCor(ev: React.ChangeEvent<HTMLInputElement>) {
+    setCor(ev.target.value);
+  }
+
+
+  const post = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Evita o envio automático do formulário
+    try {
+      await axios.post('http://localhost:5000/painel/evento/cadastro', {
+        evento,
+        hora,
+        data,
+        outros,
+        cor
+      });
+
+      alert('Usuário cadastrado com sucesso!');
+    } catch (error) {
+        alert('Erro');
+      }
+    }
+
+
 
 
 
@@ -51,8 +99,23 @@ function App() {
       <p>nome: {nome}</p>
       <p>email: {email}</p>
       <button onClick={logout}>Sair</button>
+      
+      <Calendar onChange={setDate} value={date} tileContent={"\n Evento"} />
 
-      <Calendar onChange={setDate} value={date} tileContent="evento"/>
+<form onSubmit={post}>
+  <label htmlFor="evento">Evento:</label>
+  <input type="text" id='evento' name='evento' placeholder='Insira o nome do evento' value={evento} onChange={(ev) => changeEvento(ev)}/>
+  <label htmlFor="hora">Hora:</label>
+  <input type="time" id='hora' name='hora' value={hora} onChange={(ev) => changeHora(ev)}/>
+  <label htmlFor="data">Data:</label>
+  <input type="date" id='data' name='data' value={data} onChange={(ev) => changeData(ev)} />
+  <label htmlFor="outros">Outros participantes:</label>
+  <input type="email" id='outros' name='outros' value={outros} onChange={(ev) => changeOutros(ev)}/>
+  <label htmlFor="cor">Cor do evento:</label>
+  <input type="color" id="cor" name='cor' value={cor} onChange={(ev) => changeCor(ev)}/>
+  <button type='submit'>Criar evento</button>
+</form>
+
     </>
   );
 }
