@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import User from './models/usuarios.models';
 import IUser from './inteface/usuarios.interface';
 import cookieParser from 'cookie-parser';
+import Evento from './models/eventos.models'
 
 
 
@@ -28,10 +29,10 @@ const loginController = {
     try {
       if (sliceAuthenticated === 'true') {
         const data = await findData(slicesessao);
+
         const sendData = {
-          id:  data._id,
-          nome: data.nome,
-          email: data.email
+          usuario: data.usuario,
+          eventos: data.eventos
         }
         console.log(sendData)
         response.status(200).json(sendData);
@@ -52,10 +53,12 @@ async function findData(slicesessao: string) {
 
   try {
     const usuario = await User.findById({ _id: slicesessao });
-
+    
     if (usuario) {
       console.log('Usuário encontrado');
-      return usuario;
+      const eventos = await Evento.find({ email_usuario: usuario.email })
+      console.log(eventos)
+      return {usuario, eventos}
     } else {
       throw new Error('Usuário não encontrado');
     }
@@ -63,6 +66,30 @@ async function findData(slicesessao: string) {
     console.error('Erro ao procurar o usuário:', error);
     throw error;
   }
+
+
+  // async function findEvento(slicesessao: string) {
+  //   await connect('mongodb://127.0.0.1:27017/agenda');
+  
+  //   try {
+  //     const evento = await Evento.find({ email_usuario: slicesessao });
+  
+  //     if (evento) {
+  //       console.log('evento encontrado');
+  //       return evento;
+  //     } else {
+  //       throw new Error('evento não encontrado');
+  //     }
+  //   } catch (error) {
+  //     console.error('Erro ao procurar o evento:', error);
+  //     throw error;
+  //   }}
+
+
+
+
+
+  
 }
     
 export default loginController;
