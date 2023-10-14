@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 function App() {
 
   const [id, setId] = useState('')
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     // Use useEffect para fazer a solicitação HTTP quando o componente for montado
@@ -36,6 +38,12 @@ function App() {
     console.log("logout");
   };
 
+// criando eventos no
+
+
+
+
+
   return (
     <>
       <h1>Olá</h1>
@@ -43,6 +51,8 @@ function App() {
       <p>nome: {nome}</p>
       <p>email: {email}</p>
       <button onClick={logout}>Sair</button>
+
+      <Calendar onChange={setDate} value={date} tileContent="evento"/>
     </>
   );
 }
